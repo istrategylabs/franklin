@@ -4,26 +4,36 @@ local db = pg:new()
 
 db:set_timeout(3000)
 
--- Hardcoded values for now...these will surely be made into env vars shortly
+local db_host = os.getenv("DATABASE_HOST")
+local db_name = os.getenv("DATABASE_NAME")
+local db_user = os.getenv("DATABASE_USER")
+local db_pass = os.getenv("DATABASE_PASS")
+
 local ok, err = db:connect({
-  host="aa6vyszgaxkja0.cuuxw5vnhy2g.us-east-1.rds.amazonaws.com",
+  host=db_host,
   port=5432,
-  database="ebdb",
-  user="franklin",
-  password="foobar",
+  database=db_name,
+  user=db_user,
+  password=db_pass,
   compact=false
 })
 
 if not ok then
-    ngx.say(err)
+  ngx.say(err)
 end
 
--- Will obviously need a way to make this more 'dynamic'. We have the url already so it should not be hard
-local res, err = db:query("SELECT path FROM builder_site WHERE url='istrategylabs-milagro.islstatic.com'")
+-- Host that is sent to us through nginx
+local host = ngx.var.http_host
+ngx.var.franklin_pages_host = host
+
+local res, err = db:query("SELECT path FROM builder_site WHERE url=" .. host)
 
 if not res then
-   ngx.say("Could not get result")
+  ngx.say("Could not get result")
 end
 
--- Will need to work with the formatting of this output, but it's a start
-ngx.say("result #1: ", cjson.encode(res))
+local encoded_path = cjson.encode(res[1]["path"])
+ngx.var.franklin_pages_path = encoded_path
+
+-- Just "saying" the value for debugging
+ngx.say(encoded_path)
