@@ -26,14 +26,7 @@ end
 local host = ngx.var.http_host
 ngx.var.franklin_pages_host = host
 
-local res, err = db:query("SELECT path FROM builder_site WHERE url=" .. host)
+local res, err = db:query("SELECT path FROM builder_site WHERE url='" .. host .. "'")
 
-if not res then
-  ngx.say("Could not get result")
-end
-
-local encoded_path = cjson.encode(res[1]["path"])
-ngx.var.franklin_pages_path = encoded_path
-
--- Just "saying" the value for debugging
-ngx.say(encoded_path)
+local path = res[1]["path"]
+ngx.var.franklin_pages_path = path
