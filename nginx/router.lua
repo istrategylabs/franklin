@@ -28,5 +28,12 @@ ngx.var.franklin_pages_host = host
 
 local res, err = db:query("SELECT path FROM builder_site WHERE url='" .. host .. "'")
 
+if not res[1] then
+  ngx.status = ngx.HTTP_NOT_FOUND
+  ngx.header["Content-type"] = "text/html"
+  ngx.say("Site not found")
+  ngx.exit(0)
+end
+
 local path = res[1]["path"]
 ngx.var.franklin_pages_path = path
