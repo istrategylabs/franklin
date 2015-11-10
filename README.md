@@ -11,3 +11,7 @@ This is the 'main' repository that will eventually orchistrate the creation and 
 [franklin api](https://github.com/istrategylabs/franklin-api)
 
 [franklin build](https://github.com/istrategylabs/franklin-build)
+
+[franklin dashboard](https://github.com/istrategylabs/franklin-dashboard)
+
+[franklin test](https://github.com/istrategylabs/franklin-test)
