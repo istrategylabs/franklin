@@ -26,7 +26,7 @@ end
 local host = ngx.var.http_host
 ngx.var.franklin_pages_host = host
 
-local res, err = db:query("SELECT path FROM builder_site WHERE url='" .. host .. "'")
+local res, err = db:query("SELECT path FROM builder_build b, builder_environment e WHERE e.current_deploy_id=b.id AND e.url='" .. host .. "'")
 
 if not res[1] then
   ngx.status = ngx.HTTP_NOT_FOUND
