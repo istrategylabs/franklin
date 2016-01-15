@@ -8,6 +8,7 @@ local db_host = os.getenv("DATABASE_HOST")
 local db_name = os.getenv("DATABASE_NAME")
 local db_user = os.getenv("DATABASE_USER")
 local db_pass = os.getenv("DATABASE_PASS")
+local deploy_root_path = os.getenv("DEPLOY_ROOT_FOLDER")
 
 local ok, err = db:connect({
   host=db_host,
@@ -35,5 +36,5 @@ if not res[1] then
   ngx.exit(0)
 end
 
-local path = res[1]["path"]
+local path = deploy_root_path .. res[1]["path"]
 ngx.var.franklin_pages_path = path
