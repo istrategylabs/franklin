@@ -61,7 +61,7 @@ sudo mkdir -p /var/nginx/conf
 sudo cp /franklin-static/nginx/nginx.conf /var/nginx/conf/
 sudo cp /franklin-static/nginx/router.lua /var/nginx/conf/
 sudo cp /franklin-static/nginx/mime.types /var/nginx/conf/
-sudo cp /franklin-static/upstart/franklin-static.conf /etc/init/resty.conf
+sudo cp /franklin-static/upstart/franklin-static.conf /etc/init/resty
 
 # Start the service
 sudo service resty start
