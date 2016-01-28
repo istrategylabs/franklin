@@ -1,0 +1,1 @@
+FROM ficusio/openresty
