@@ -20,6 +20,7 @@ local ok, err = db:connect({
 })
 
 if not ok then
+  ngx.say("Not connected to DB")
   ngx.say(err)
 end
 
@@ -27,14 +28,18 @@ end
 local host = ngx.var.http_host
 ngx.var.franklin_pages_host = host
 
-local res, err = db:query("SELECT path FROM builder_build b, builder_environment e WHERE e.current_deploy_id=b.id AND e.url='" .. host .. "'")
+
+local res, err = db:query("SELECT path FROM builder_build b, builder_environment e WHERE e.url='" .. host .. "' AND b.status='SUC' ORDER BY b.created DESC LIMIT 1")
 
 if not res[1] then
   ngx.status = ngx.HTTP_NOT_FOUND
   ngx.header["Content-type"] = "text/html"
-  ngx.say("Site not found")
+  ngx.say(res)
   ngx.exit(0)
 end
 
+-- Commented out lines MAY be needed
+-- local path = deploy_root_path .. res[1]["path"] .. string.sub(uri,1,-2)
 local path = deploy_root_path .. res[1]["path"]
+-- ngx.var.franklin_pages_uri = uri
 ngx.var.franklin_pages_path = path
