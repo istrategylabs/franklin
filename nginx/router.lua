@@ -24,11 +24,14 @@ if not ok then
   ngx.say(err)
 end
 
--- Host that is sent to us through nginx
+-- All uris should map to a file name in S3
+local uri = ngx.var.request_uri
+if string.find(uri, "/$") then
+  ngx.var.project_uri = uri .. "index.html"
+end
+
+-- Use the passed url to find the project directory on S3
 local host = ngx.var.http_host
-ngx.var.franklin_pages_host = host
-
-
 local res, err = db:query("SELECT path FROM builder_build b, builder_environment e WHERE e.url='" .. host .. "' AND b.status='SUC' ORDER BY b.created DESC LIMIT 1")
 
 if not res[1] then
@@ -38,8 +41,4 @@ if not res[1] then
   ngx.exit(0)
 end
 
--- Commented out lines MAY be needed
--- local path = deploy_root_path .. res[1]["path"] .. string.sub(uri,1,-2)
-local path = deploy_root_path .. res[1]["path"]
--- ngx.var.franklin_pages_uri = uri
-ngx.var.franklin_pages_path = path
+ngx.var.project_root = res[1]["path"]
