@@ -32,7 +32,7 @@ end
 
 -- Use the passed url to find the project directory on S3
 local host = ngx.var.http_host
-local res, err = db:query("SELECT path FROM builder_build b, builder_environment e WHERE e.url='" .. host .. "' AND b.status='SUC' ORDER BY b.created DESC LIMIT 1")
+local res, err = db:query("SELECT * FROM builder_build b JOIN builder_deploy d ON b.id = d.build_id JOIN builder_environment e ON e.id = d.environment_id WHERE e.url='" .. host .. "' AND b.status='SUC' ORDER_BY d.deployed DESC LIMIT 1")
 
 if not res[1] then
   ngx.status = ngx.HTTP_NOT_FOUND
