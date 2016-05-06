@@ -42,3 +42,8 @@ if not res[1] then
 end
 
 ngx.var.project_root = res[1]["path"]
+
+local method = ngx.var.request_method
+local now = ngx.var.now
+local bucket = ngx.var.bucket
+ngx.var.string_to_sign = method .. "\n\n\n\nx-amz-date:" .. now .. "\n/" .. bucket .. "/" .. res[1]["path"] .. ngx.var.project_uri
